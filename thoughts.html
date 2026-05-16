@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Thoughts — Ash's POV</title>
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=sharpie@400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0D0D0D; --bg-2: #161616; --gold: #F5A000;
+      --chalk: #F2F2F2; --chalk-dim: #8A8A8A;
+      --parchment: #f4efe6; --ink: #18140f; --ink-dim: #6b6459;
+      --serif: 'Georgia','Times New Roman',serif;
+      --mono: 'Courier New',monospace;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--chalk);font-family:var(--serif);overflow-x:hidden;cursor:none;opacity:0;animation:pagein .45s ease .05s forwards}
+
+    #cursor{position:fixed;width:10px;height:10px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .15s ease;mix-blend-mode:difference}
+    #trail{position:fixed;inset:0;pointer-events:none;z-index:9998}
+
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 3rem;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;background:rgba(10,10,10,.82);backdrop-filter:blur(28px);border-bottom:1px solid rgba(255,255,255,.03);transition:box-shadow .4s}
+    .logo{font-family:var(--mono);font-size:.9rem;font-weight:700;color:rgba(245,160,0,.75);letter-spacing:.38em;text-decoration:none;text-transform:uppercase;transition:color .4s;display:inline-flex;align-items:center;gap:.6rem}
+    .logo:hover{color:var(--gold)}
+    .logo-icon{flex-shrink:0;opacity:.8;transition:opacity .4s}
+    .logo:hover .logo-icon{opacity:1}
+    .tabs{display:flex;list-style:none;gap:3.2rem;align-items:center}
+    .tabs a{display:block;position:relative;padding-bottom:.2rem;color:rgba(242,242,242,.28);text-decoration:none;font-family:var(--mono);font-size:.75rem;letter-spacing:.42em;text-transform:uppercase;transition:color .45s ease,text-shadow .45s ease}
+    .tabs a::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:var(--gold);transform:scaleX(0);transform-origin:center;transition:transform .45s cubic-bezier(.4,0,.2,1),opacity .45s ease;opacity:0}
+    .tabs a.on{color:rgba(242,242,242,.9);text-shadow:0 0 32px rgba(245,160,0,.22)}
+    .tabs a.on::after{transform:scaleX(1);opacity:1}
+    .tabs a:hover:not(.on){color:rgba(242,242,242,.55);text-shadow:0 0 20px rgba(245,160,0,.1)}
+    .nav-r{display:flex;gap:2.8rem;justify-content:flex-end;align-items:center}
+    .nav-r a{color:var(--chalk);font-weight:700;text-decoration:none;font-family:var(--mono);font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;transition:color .4s ease}
+    .nav-r a:hover{color:rgba(242,242,242,.6)}
+
+    .page-hd{min-height:62vh;display:flex;flex-direction:column;justify-content:flex-end;padding:9rem 3rem 5rem;position:relative;overflow:hidden;background:var(--bg)}
+    .page-hd::after{content:'';position:absolute;bottom:0;left:3rem;right:3rem;height:1px;background:linear-gradient(to right,rgba(245,160,0,.22),transparent)}
+    .ph-label{font-family:var(--mono);font-size:.65rem;letter-spacing:.6em;color:var(--gold);text-transform:uppercase;margin-bottom:1.8rem;opacity:0;animation:fu 1s ease .25s forwards}
+    .ph-title{font-size:clamp(3.2rem,8vw,7rem);font-weight:400;line-height:.9;letter-spacing:-.02em;color:var(--chalk);margin-bottom:2rem;opacity:0;animation:fu 1s ease .45s forwards}
+    .ph-sub{font-family:var(--mono);font-size:.75rem;color:var(--chalk-dim);letter-spacing:.18em;max-width:520px;line-height:1.85;opacity:0;animation:fu 1s ease .65s forwards}
+
+    .writing-section{background:var(--parchment);color:var(--ink)}
+    .si{max-width:1400px;margin:0 auto;padding:7rem 3rem}
+    .sh{margin-bottom:4rem}
+    .slabel{font-family:var(--mono);font-size:.68rem;letter-spacing:.45em;text-transform:uppercase;margin-bottom:.8rem}
+    .stitle{font-size:clamp(2.5rem,5vw,4rem);font-weight:400;line-height:1.1}
+    .writing-section .slabel{color:#b07000}
+    .writing-section .stitle{color:var(--ink)}
+
+    .wg{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.8rem}
+    .wc{background:#fff9f2;border:1px solid rgba(26,20,15,.1);padding:2.2rem;cursor:pointer;position:relative;opacity:0;transform:translateY(36px);transition:opacity .6s ease,transform .6s ease,box-shadow .3s,border-color .3s}
+    .wc.rv{opacity:1;transform:translateY(0)}
+    .wc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:transparent;transition:background .3s}
+    .wc:hover{box-shadow:0 12px 36px rgba(26,20,15,.1);border-color:rgba(26,20,15,.2)}
+    .wc:hover::before{background:#b07000}
+    .wtag{font-family:var(--mono);font-size:.6rem;letter-spacing:.38em;color:#b07000;text-transform:uppercase;margin-bottom:1rem}
+    .wtitle{font-size:1.3rem;font-weight:400;color:var(--ink);line-height:1.3;margin-bottom:1rem}
+    .wex{font-size:.9rem;color:var(--ink-dim);line-height:1.85;margin-bottom:1.5rem}
+    .wft{display:flex;justify-content:space-between;align-items:center;padding-top:1.2rem;border-top:1px solid rgba(26,20,15,.08)}
+    .wdate{font-family:var(--mono);font-size:.62rem;letter-spacing:.15em;color:var(--ink-dim)}
+    .wread{font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;color:#b07000;text-transform:uppercase}
+
+    #wm{position:fixed;inset:0;z-index:1001;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s}
+    #wm.on{opacity:1;pointer-events:all}
+    .mb{position:absolute;inset:0;background:rgba(5,5,5,.88);backdrop-filter:blur(8px)}
+    .mc{position:relative;background:var(--parchment);color:var(--ink);max-width:720px;width:90vw;max-height:86vh;overflow-y:auto;padding:3.5rem;z-index:1}
+    .mc::-webkit-scrollbar{width:4px}.mc::-webkit-scrollbar-thumb{background:rgba(26,20,15,.18)}
+    .mcl{position:absolute;top:1.5rem;right:1.5rem;background:none;border:1px solid rgba(26,20,15,.2);color:var(--ink);width:36px;height:36px;font-size:.85rem;cursor:none;display:flex;align-items:center;justify-content:center;transition:background .2s}
+    .mcl:hover{background:rgba(26,20,15,.08)}
+    .mtag{font-family:var(--mono);font-size:.6rem;letter-spacing:.4em;color:#b07000;text-transform:uppercase;margin-bottom:1rem}
+    .mtitle{font-size:2rem;font-weight:400;color:var(--ink);line-height:1.25;margin-bottom:.8rem}
+    .mmeta{font-family:var(--mono);font-size:.62rem;letter-spacing:.18em;color:var(--ink-dim);margin-bottom:2.5rem;padding-bottom:2rem;border-bottom:1px solid rgba(26,20,15,.1)}
+    .mbody{font-size:1rem;line-height:1.95;color:var(--ink)}
+    .mbody p{margin-bottom:1.4rem}.mbody p:last-child{margin-bottom:0}
+
+    footer{background:var(--bg);text-align:center;padding:2.5rem;border-top:1px solid rgba(255,255,255,.04)}
+    footer p{font-family:var(--mono);font-size:.6rem;color:var(--chalk-dim);letter-spacing:.3em;opacity:.3}
+
+    #burger{display:none;flex-direction:column;justify-content:center;gap:6px;background:none;border:none;cursor:none;padding:4px;z-index:1001}
+    #burger span{display:block;width:24px;height:1.5px;background:rgba(245,160,0,.8);transform-origin:center;transition:transform .4s ease,opacity .35s ease,width .35s ease}
+    #burger.open span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
+    #burger.open span:nth-child(2){opacity:0;width:0}
+    #burger.open span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+    #mob-menu{position:fixed;inset:0;z-index:999;background:rgba(8,8,8,.97);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .5s cubic-bezier(.4,0,.2,1)}
+    #mob-menu.open{opacity:1;pointer-events:all}
+    #mob-close{position:absolute;top:1.8rem;right:1.8rem;background:none;border:none;cursor:none;color:rgba(242,242,242,.3);font-size:1.1rem;font-family:var(--mono);letter-spacing:.05em;transition:color .3s;padding:.5rem;line-height:1}
+    #mob-close:hover{color:rgba(242,242,242,.7)}
+    .mob-inner{display:flex;flex-direction:column;align-items:center}
+    .mob-nav,.mob-util{list-style:none;text-align:center}
+    .mob-nav li,.mob-util li{opacity:0;transform:translateY(22px);transition:opacity .5s ease,transform .5s ease}
+    #mob-menu.open .mob-nav li:nth-child(1){opacity:1;transform:none;transition-delay:.1s}
+    #mob-menu.open .mob-nav li:nth-child(2){opacity:1;transform:none;transition-delay:.18s}
+    #mob-menu.open .mob-nav li:nth-child(3){opacity:1;transform:none;transition-delay:.26s}
+    #mob-menu.open .mob-util li:nth-child(1){opacity:1;transform:none;transition-delay:.38s}
+    #mob-menu.open .mob-util li:nth-child(2){opacity:1;transform:none;transition-delay:.46s}
+    .mob-nav a{font-family:var(--mono);font-size:clamp(1.8rem,9vw,2.8rem);color:rgba(242,242,242,.3);text-decoration:none;letter-spacing:.28em;text-transform:uppercase;transition:color .35s ease,text-shadow .35s ease;display:block;padding:.55rem 0}
+    .mob-nav a.on,.mob-nav a:hover{color:rgba(242,242,242,.9);text-shadow:0 0 40px rgba(245,160,0,.28)}
+    .mob-sep{width:1px;height:44px;background:linear-gradient(to bottom,transparent,rgba(245,160,0,.2),transparent);margin:1rem auto}
+    .mob-util a{font-family:var(--mono);font-size:clamp(.7rem,3.5vw,.85rem);color:rgba(242,242,242,.28);text-decoration:none;letter-spacing:.38em;text-transform:uppercase;transition:color .35s ease;display:block;padding:.45rem 0}
+    .mob-util a:hover{color:rgba(242,242,242,.65)}
+
+    @keyframes fu{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes pagein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+    @media(max-width:860px){nav{grid-template-columns:1fr auto;padding:1.2rem 1.8rem}.tabs,.nav-r{display:none}#burger{display:flex}}
+    @media(max-width:700px){
+      .page-hd{padding:7rem 1.5rem 3.5rem;min-height:48vh}
+      .wg{grid-template-columns:1fr}
+      .si{padding:5rem 1.5rem}
+    }
+  </style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<canvas id="trail"></canvas>
+
+<nav>
+  <a href="index.html" class="logo" data-nav><svg class="logo-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>Ash's POV</a>
+  <ul class="tabs">
+    <li><a href="thoughts.html" class="on" data-nav>Thoughts</a></li>
+    <li><a href="traces.html" data-nav>Traces</a></li>
+    <li><a href="frames.html" data-nav>Frames</a></li>
+  </ul>
+  <div class="nav-r">
+    <a href="index.html#about">About</a>
+    <a href="index.html#contact">Contact</a>
+  </div>
+  <button id="burger" aria-label="Open menu"><span></span><span></span><span></span></button>
+</nav>
+
+<div id="mob-menu" role="dialog" aria-modal="true">
+  <button id="mob-close" aria-label="Close menu">&#10005;</button>
+  <div class="mob-inner">
+    <ul class="mob-nav">
+      <li><a href="thoughts.html" class="on" data-nav>Thoughts</a></li>
+      <li><a href="traces.html" data-nav>Traces</a></li>
+      <li><a href="frames.html" data-nav>Frames</a></li>
+    </ul>
+    <div class="mob-sep"></div>
+    <ul class="mob-util">
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+  </div>
+</div>
+
+<div class="page-hd">
+  <p class="ph-label">Thoughts</p>
+  <h1 class="ph-title">Words &amp;<br>observations.</h1>
+  <p class="ph-sub">Essays, journals, and ideas written in the margins of making things.</p>
+</div>
+
+<div class="writing-section">
+  <div class="si">
+    <div class="sh">
+      <p class="slabel">Essays &amp; notes</p>
+      <h2 class="stitle">Writing</h2>
+    </div>
+    <div class="wg">
+
+      <div class="wc" data-post="0"><p class="wtag">Essay</p><h3 class="wtitle">On the weight of a pencil</h3><p class="wex">Every tool has a grammar. The pencil insists on hesitation — it lets you change your mind, lets you erase. But the longer you work, the more you realise the pencil is not about forgiveness.</p><div class="wft"><span class="wdate">May 2026</span><span class="wread">Read &#8594;</span></div></div>
+
+      <div class="wc" data-post="1"><p class="wtag">Reflection</p><h3 class="wtitle">Shadows and what they remember</h3><p class="wex">Charcoal is the medium that understands shadows best — because charcoal is itself a kind of shadow. Burned wood. The ghost of something that once held light in its cells.</p><div class="wft"><span class="wdate">April 2026</span><span class="wread">Read &#8594;</span></div></div>
+
+      <div class="wc" data-post="2"><p class="wtag">Photography</p><h3 class="wtitle">Why I photograph silence</h3><p class="wex">There is a particular quality of light in a room after everyone has left. The chairs still hold the ghost of weight. A glass on the sill catches the late afternoon at exactly the angle that makes you want to be smaller.</p><div class="wft"><span class="wdate">March 2026</span><span class="wread">Read &#8594;</span></div></div>
+
+      <div class="wc" data-post="3"><p class="wtag">Craft</p><h3 class="wtitle">The grammar of lines</h3><p class="wex">A line is never just a line. It is a direction, a speed, a pressure. It knows whether the hand that made it was afraid. You can feel the hesitation at the corner of a mouth in a portrait.</p><div class="wft"><span class="wdate">February 2026</span><span class="wread">Read &#8594;</span></div></div>
+
+      <div class="wc" data-post="4"><p class="wtag">Journal</p><h3 class="wtitle">Sketchbook as archive</h3><p class="wex">I have seventeen sketchbooks. They sit on a shelf in chronological order, spines worn, some with paint on the covers, most with coffee rings. I rarely open the old ones.</p><div class="wft"><span class="wdate">January 2026</span><span class="wread">Read &#8594;</span></div></div>
+
+      <div class="wc" data-post="5"><p class="wtag">Essay</p><h3 class="wtitle">Figure, ground, and everything between</h3><p class="wex">The art school exercise: draw not the object, but the space around it. You're not drawing the chair — you're drawing the air the chair displaces. A lesson I keep relearning.</p><div class="wft"><span class="wdate">December 2025</span><span class="wread">Read &#8594;</span></div></div>
+
+    </div>
+  </div>
+</div>
+
+<footer><p>&copy; 2026 Ash's POV &mdash; All rights reserved</p></footer>
+
+<div id="wm">
+  <div class="mb" onclick="cWm()"></div>
+  <div class="mc">
+    <button class="mcl" onclick="cWm()">&#10005;</button>
+    <p class="mtag" id="mt"></p>
+    <h2 class="mtitle" id="mti"></h2>
+    <p class="mmeta" id="mm"></p>
+    <div class="mbody" id="mb"></div>
+  </div>
+</div>
+
+<script>
+const P=[
+  {tag:'Essay',title:'On the weight of a pencil',date:'May 2026',body:'<p>Every tool has a grammar. The pencil insists on hesitation — it lets you change your mind, lets you erase, lets you return. But the longer you work, the more you realise the pencil is not about forgiveness. It is about commitment in small doses.</p><p>I\'ve been thinking about what it means to pick up a pencil instead of a pen, a brush, a piece of charcoal. There is something in the weight of it — that particular lightness — that feels like a question rather than a statement.</p><p>The pen commits. The brush commits emphatically. But the pencil holds its options open, and perhaps that is why it is the tool of sketches, of drafts, of first thoughts. It is the tool that remembers that beginnings are not endings.</p><p>And yet. When you watch someone who has drawn for decades pick up a pencil, there is no hesitation at all. The line comes down with exactly the right pressure, the right speed. The pencil stops being a question and becomes a sentence. A complete one.</p><p>I think about this often. How mastery is not the absence of uncertainty but the ability to move through it without waiting for it to resolve.</p>'},
+  {tag:'Reflection',title:'Shadows and what they remember',date:'April 2026',body:'<p>Charcoal is the medium that understands shadows best — because charcoal is itself a kind of shadow. Burned wood. The ghost of something that once held light in its cells. When I press it against paper, I\'m asking it to remember what it was.</p><p>The interesting thing about charcoal is that it smudges. This is not a flaw. This is its character. You can\'t make a charcoal line that is entirely certain of itself — the edges blur slightly, breathe, suggest. Even at its darkest, charcoal holds the possibility of lightness.</p><p>Shadows in a drawing are not just the dark parts. They are the argument between presence and absence. They are how you know a thing has volume, that it occupies space, that it is real. Without shadow, a face is just a collection of features. With shadow, it becomes a person.</p><p>I\'ve been sitting with that thought lately: that to understand something, you often have to look at what surrounds it. The shadow tells you where the light has been.</p>'},
+  {tag:'Photography',title:'Why I photograph silence',date:'March 2026',body:'<p>There is a particular quality of light in a room after everyone has left. The chairs still hold the ghost of weight. A glass on the sill catches the late afternoon at exactly the angle that makes you want to be smaller, quieter, more still.</p><p>I started photographing empty rooms almost by accident. I was early to a meeting once, sitting alone, and the light through the venetian blinds was making these exact parallel shadows on the table. I photographed it before anyone arrived. It is still one of my favourite photographs.</p><p>What I\'ve come to understand: silence has a texture. You can feel it in the quality of light. Rooms that have been recently occupied feel different from rooms that have been empty for a long time. The shadows are more settled.</p><p>Photography, for me, is about learning to see what is already there. Not adding. Not arranging. Just waiting until the light agrees with itself.</p>'},
+  {tag:'Craft',title:'The grammar of lines',date:'February 2026',body:'<p>A line is never just a line. It is a direction, a speed, a pressure. It knows whether the hand that made it was afraid. You can feel the hesitation at the corner of a mouth in a portrait — where the artist paused, reconsidered, and pressed on anyway.</p><p>I\'ve been studying old sketchbooks. Not mine — other people\'s. There is something extraordinary about looking at a master\'s sketchbook, the pages where they were thinking, not performing. The lines are more alive in the rough sketches than in the finished works.</p><p>Every line has a grammar: a subject (where it starts), a verb (the movement of the hand), and an object (where it arrives). The punctuation is the pressure — how hard you press at different points creates emphasis, rhythm, breath.</p><p>The hardest thing to teach is line quality. You can explain proportion, perspective, value. But line quality is something you feel in your hand long before you can see it on the page.</p>'},
+  {tag:'Journal',title:'Sketchbook as archive',date:'January 2026',body:'<p>I have seventeen sketchbooks. They sit on a shelf in chronological order, spines worn, some with paint on the covers, most with coffee rings. I rarely open the old ones. But I know they\'re there, and something about that knowledge changes how I draw today.</p><p>An archive is not just a record. It is a kind of permission — permission to move forward because you have already proven to yourself that you can. Every filled sketchbook is evidence that you kept going. Even on the bad days. Even when the drawings were terrible.</p><p>The first sketchbook is the hardest to fill. Everything feels too precious, the blank pages too white. The seventeenth sketchbook is different. You know the paper will survive whatever you put on it. You know you will survive the bad drawings.</p>'},
+  {tag:'Essay',title:'Figure, ground, and everything between',date:'December 2025',body:'<p>The art school exercise: draw not the object, but the space around it. Negative space. You\'re not drawing the chair — you\'re drawing the air the chair displaces. This is a lesson I keep relearning. In drawing. In writing. In conversation.</p><p>There is a particular freedom that comes from looking at what surrounds the thing rather than the thing itself. You stop being attached to your idea of what it should look like. You start seeing what is actually there.</p><p>In writing, the negative space is what you don\'t say. The pause. The sentence that ends before it should. White space on the page is not emptiness — it is silence between phrases, and silence carries weight.</p><p>I keep returning to this idea that the most interesting things in any work are the edges — where one thing becomes another. Where figure becomes ground. That threshold is where most of the meaning lives.</p>'}
+];
+
+document.querySelectorAll('a[data-nav]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    const href=a.href;
+    document.body.style.transition='opacity .32s ease';
+    document.body.style.opacity='0';
+    setTimeout(()=>location.href=href,340);
+  });
+});
+
+const cur2=document.getElementById('cursor');
+document.addEventListener('mousemove',e=>{cur2.style.left=e.clientX+'px';cur2.style.top=e.clientY+'px';});
+document.querySelectorAll('a,button,.wc').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cur2.style.transform='translate(-50%,-50%) scale(2.2)');
+  el.addEventListener('mouseleave',()=>cur2.style.transform='translate(-50%,-50%) scale(1)');
+});
+
+const cv=document.getElementById('trail'),ctx=cv.getContext('2d');
+let pts=[];
+function rs(){cv.width=window.innerWidth;cv.height=window.innerHeight;}
+rs();window.addEventListener('resize',rs);
+document.addEventListener('mousemove',e=>{for(let i=0;i<4;i++)pts.push({x:e.clientX+(Math.random()-.5)*8,y:e.clientY+(Math.random()-.5)*8,s:Math.random()*2.5+.5,a:Math.random()*.45+.15,d:Math.random()*.014+.008,ang:Math.random()*Math.PI*2,l:Math.random()*9+3});});
+(function loop(){ctx.clearRect(0,0,cv.width,cv.height);pts=pts.filter(p=>p.a>.01);pts.forEach(p=>{ctx.save();ctx.globalAlpha=p.a;ctx.strokeStyle='#F5A000';ctx.lineWidth=p.s*.45;ctx.lineCap='round';ctx.translate(p.x,p.y);ctx.rotate(p.ang);ctx.beginPath();ctx.moveTo(-p.l/2,0);ctx.lineTo(p.l/2,0);ctx.stroke();ctx.restore();p.a-=p.d;p.l*=.96;});requestAnimationFrame(loop);})();
+
+const burger=document.getElementById('burger'),mobMenu=document.getElementById('mob-menu'),mobClose=document.getElementById('mob-close');
+function openMob(){burger.classList.add('open');mobMenu.classList.add('open');document.body.style.overflow='hidden';}
+function closeMob(){burger.classList.remove('open');mobMenu.classList.remove('open');document.body.style.overflow='';}
+burger.addEventListener('click',()=>mobMenu.classList.contains('open')?closeMob():openMob());
+mobClose.addEventListener('click',closeMob);
+
+const ro=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('rv');ro.unobserve(e.target);}});},{threshold:.07});
+document.querySelectorAll('.wc').forEach(el=>ro.observe(el));
+
+const wm=document.getElementById('wm');
+document.querySelectorAll('.wc').forEach(c=>{
+  c.addEventListener('click',()=>{
+    const p=P[parseInt(c.dataset.post)];if(!p)return;
+    document.getElementById('mt').textContent=p.tag;
+    document.getElementById('mti').textContent=p.title;
+    document.getElementById('mm').textContent=p.date;
+    document.getElementById('mb').innerHTML=p.body;
+    wm.classList.add('on');document.body.style.overflow='hidden';
+  });
+});
+function cWm(){wm.classList.remove('on');document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')cWm();});
+
+window.addEventListener('scroll',()=>{document.querySelector('nav').style.boxShadow=window.scrollY>60?'0 1px 0 rgba(245,160,0,.08)':'none';},{passive:true});
+</script>
+</body>
+</html>
