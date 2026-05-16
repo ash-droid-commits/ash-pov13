@@ -1,0 +1,525 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ash's POV</title>
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Zina&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=sharpie@400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0D0D0D; --bg-2: #161616; --gold: #F5A000; --glow: #355F4A;
+      --chalk: #F2F2F2; --chalk-dim: #8A8A8A;
+      --parchment: #f4efe6; --ink: #18140f; --ink-dim: #6b6459;
+      --serif: 'Georgia','Times New Roman',serif;
+      --mono: 'Courier New',monospace;
+      --zina: 'Zina',cursive;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--chalk);font-family:var(--serif);overflow-x:hidden;cursor:none}
+
+    #cursor{position:fixed;width:10px;height:10px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .15s ease;mix-blend-mode:difference}
+    #trail{position:fixed;inset:0;pointer-events:none;z-index:9998}
+
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 3rem;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;background:rgba(10,10,10,.82);backdrop-filter:blur(28px);border-bottom:1px solid rgba(255,255,255,.03);transition:box-shadow .4s}
+    .logo{font-family:var(--mono);font-size:.9rem;font-weight:700;color:rgba(245,160,0,.75);letter-spacing:.38em;text-decoration:none;text-transform:uppercase;transition:color .4s;display:inline-flex;align-items:center;gap:.6rem}
+    .logo:hover{color:var(--gold)}
+    .logo-icon{flex-shrink:0;opacity:.8;transition:opacity .4s}
+    .logo:hover .logo-icon{opacity:1}
+    .tabs{display:flex;list-style:none;gap:3.2rem;align-items:center}
+    .tabs a{display:block;position:relative;padding-bottom:.2rem;color:rgba(242,242,242,.28);text-decoration:none;font-family:var(--mono);font-size:.75rem;letter-spacing:.42em;text-transform:uppercase;transition:color .45s ease,text-shadow .45s ease}
+    .tabs a::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:var(--gold);transform:scaleX(0);transform-origin:center;transition:transform .45s cubic-bezier(.4,0,.2,1),opacity .45s ease;opacity:0}
+    .tabs a.on{color:rgba(242,242,242,.9);text-shadow:0 0 32px rgba(245,160,0,.22)}
+    .tabs a.on::after{transform:scaleX(1);opacity:1}
+    .tabs a:hover:not(.on){color:rgba(242,242,242,.55);text-shadow:0 0 20px rgba(245,160,0,.1)}
+    .nav-r{display:flex;gap:2.8rem;justify-content:flex-end;align-items:center}
+    .nav-r a{color:var(--chalk);font-weight:700;text-decoration:none;font-family:var(--mono);font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;transition:color .4s ease}
+    .nav-r a:hover{color:rgba(242,242,242,.6)}
+
+    #hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;overflow:hidden;background:url('landingbg.png') center/cover no-repeat}
+    .hbg{position:absolute;inset:0;background:rgba(13,13,13,.45)}
+    .hbg::after{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");opacity:.35}
+    .hc{position:relative;z-index:1}
+    .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.5em;color:var(--gold);text-transform:uppercase;margin-bottom:2rem;opacity:0;animation:fu 1s ease .4s forwards}
+    .htitle{font-size:clamp(4rem,11vw,8rem);font-weight:400;line-height:.88;letter-spacing:-.02em;color:var(--chalk);margin-bottom:1.5rem;opacity:0;animation:fu 1s ease .75s forwards}
+    .htitle span{color:var(--gold)}
+    .hsub{font-family:'Sharpie',sans-serif;font-size:1.14rem;color:var(--chalk);font-weight:400;letter-spacing:.04em;margin-top:3.5rem;margin-bottom:2.5rem;opacity:0;animation:fu 1s ease 1.05s forwards}
+    .flourish{opacity:0;animation:fu .6s ease 1.35s forwards}
+    .dp{stroke:var(--gold);fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1200;stroke-dashoffset:1200;animation:dr 2.8s ease 1.6s forwards}
+    .dp.d1{animation-delay:2s}.dp.d2{animation-delay:2.3s}
+    .hlinks{margin-top:4rem;display:flex;gap:3rem;justify-content:center;opacity:0;animation:fu 1s ease 2.6s forwards}
+    .hlinks a{font-family:var(--mono);font-size:.68rem;letter-spacing:.3em;text-transform:uppercase;text-decoration:none;color:var(--chalk-dim);border-bottom:1px solid rgba(245,160,0,.3);padding-bottom:.2rem;transition:color .3s,border-color .3s}
+    .hlinks a:hover{color:var(--gold);border-color:var(--gold)}
+    .scroll-ind{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.6rem;opacity:0;animation:fu 1s ease 3s forwards}
+    .scroll-ind span{font-family:var(--mono);font-size:.6rem;letter-spacing:.4em;color:var(--chalk-dim);text-transform:uppercase}
+    .scroll-line{width:1px;height:55px;background:linear-gradient(to bottom,var(--gold),transparent);animation:sp 2.2s ease-in-out infinite}
+
+    #wrap{transition:background .5s ease}
+    .sec{display:none}
+    .sec.on{display:block;animation:si .45s ease forwards}
+
+    .si{max-width:1400px;margin:0 auto;padding:7rem 3rem}
+    .sh{margin-bottom:4rem}
+    .slabel{font-family:var(--mono);font-size:.68rem;letter-spacing:.45em;text-transform:uppercase;margin-bottom:.8rem}
+    .stitle{font-size:clamp(2.5rem,5vw,4rem);font-weight:400;line-height:1.1}
+
+    /* ART */
+    #sa{background:var(--bg);color:var(--chalk)}
+    #sa .slabel{color:var(--gold)}
+    #sa .stitle{color:var(--chalk)}
+    .gg{display:grid;grid-template-columns:repeat(12,1fr);gap:1.2rem}
+    .gi:nth-child(1){grid-column:span 5;min-height:400px}
+    .gi:nth-child(2){grid-column:span 4;min-height:200px}
+    .gi:nth-child(3){grid-column:span 3;min-height:200px}
+    .gi:nth-child(4){grid-column:span 7;min-height:260px}
+    .gi:nth-child(5){grid-column:span 4;min-height:300px}
+    .gi:nth-child(6){grid-column:span 3;min-height:300px}
+    .gi:nth-child(7){grid-column:span 4;min-height:300px}
+    .gi:nth-child(8){grid-column:span 5;min-height:220px}
+    .gi:nth-child(9){grid-column:span 7;min-height:220px}
+    .gi{position:relative;overflow:hidden;background:var(--bg-2);cursor:pointer;opacity:0;transform:translateY(40px);transition:opacity .6s ease,transform .6s ease}
+    .gi.rv{opacity:1;transform:translateY(0)}
+    .gp{width:100%;height:100%;min-height:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;background:linear-gradient(145deg,#0D0D0D,#161616);border:1px solid rgba(245,160,0,.08);transition:border-color .4s}
+    .gi:hover .gp{border-color:rgba(245,160,0,.35)}
+    .gp svg{opacity:.25;transition:opacity .4s,transform .4s}
+    .gi:hover .gp svg{opacity:.55;transform:scale(1.06)}
+    .gpl{font-family:var(--mono);font-size:.62rem;letter-spacing:.25em;color:var(--chalk-dim);text-transform:uppercase;opacity:.35}
+    .go{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.92),transparent 55%);opacity:0;transition:opacity .4s;display:flex;flex-direction:column;justify-content:flex-end;padding:1.8rem}
+    .gi:hover .go{opacity:1}
+    .git{font-size:1rem;color:var(--chalk);margin-bottom:.25rem;font-weight:400}
+    .gim{font-family:var(--mono);font-size:.65rem;color:var(--gold);letter-spacing:.18em}
+    .pi{transform:translateY(var(--py,0px))}
+    .gi.rv.pi{transform:translateY(var(--py,0px))}
+
+    /* WRITING */
+    #sw{background:var(--parchment);color:var(--ink)}
+    #sw .slabel{color:#b07000}
+    #sw .stitle{color:var(--ink)}
+    .wg{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.8rem}
+    .wc{background:#fff9f2;border:1px solid rgba(26,20,15,.1);padding:2.2rem;cursor:pointer;position:relative;opacity:0;transform:translateY(36px);transition:opacity .6s ease,transform .6s ease,box-shadow .3s,border-color .3s}
+    .wc.rv{opacity:1;transform:translateY(0)}
+    .wc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:transparent;transition:background .3s}
+    .wc:hover{box-shadow:0 12px 36px rgba(26,20,15,.1);border-color:rgba(26,20,15,.2)}
+    .wc:hover::before{background:#b07000}
+    .wtag{font-family:var(--mono);font-size:.6rem;letter-spacing:.38em;color:#b07000;text-transform:uppercase;margin-bottom:1rem}
+    .wtitle{font-size:1.3rem;font-weight:400;color:var(--ink);line-height:1.3;margin-bottom:1rem}
+    .wex{font-size:.9rem;color:var(--ink-dim);line-height:1.85;margin-bottom:1.5rem}
+    .wft{display:flex;justify-content:space-between;align-items:center;padding-top:1.2rem;border-top:1px solid rgba(26,20,15,.08)}
+    .wdate{font-family:var(--mono);font-size:.62rem;letter-spacing:.15em;color:var(--ink-dim)}
+    .wread{font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;color:#b07000;text-transform:uppercase}
+
+    /* PHOTOS */
+    #sp{background:#0d0d0d;color:var(--chalk)}
+    #sp .slabel{color:var(--gold)}
+    #sp .stitle{color:var(--chalk)}
+    .pg{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem}
+    .phi:nth-child(1){grid-column:span 2;min-height:380px}
+    .phi:nth-child(2){min-height:380px}
+    .phi:nth-child(3){min-height:280px}
+    .phi:nth-child(4){min-height:280px}
+    .phi:nth-child(5){min-height:280px}
+    .phi:nth-child(6){grid-column:span 2;min-height:300px}
+    .phi:nth-child(7){min-height:300px}
+    .phi{position:relative;overflow:hidden;cursor:pointer;opacity:0;transform:scale(.97);transition:opacity .6s ease,transform .6s ease}
+    .phi.rv{opacity:1;transform:scale(1)}
+    .pp{width:100%;height:100%;min-height:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;background:linear-gradient(145deg,#0d0d0d,#161616);border:1px solid rgba(255,255,255,.04);transition:border-color .4s}
+    .phi:hover .pp{border-color:rgba(245,160,0,.2)}
+    .pp svg{opacity:.2;transition:opacity .4s}
+    .phi:hover .pp svg{opacity:.45}
+    .ppl{font-family:var(--mono);font-size:.6rem;letter-spacing:.25em;color:var(--chalk-dim);text-transform:uppercase;opacity:.3}
+    .po{position:absolute;inset:0;background:linear-gradient(to top,rgba(5,5,5,.9),transparent 50%);opacity:0;transition:opacity .4s;display:flex;flex-direction:column;justify-content:flex-end;padding:1.5rem}
+    .phi:hover .po{opacity:1}
+    .ptitle{font-size:.92rem;color:var(--chalk);margin-bottom:.2rem}
+    .pmeta{font-family:var(--mono);font-size:.62rem;color:var(--gold);letter-spacing:.18em}
+
+    /* About */
+    #about{background:var(--bg-2);padding:8rem 3rem}
+    .ai{display:grid;grid-template-columns:1fr 1fr;gap:7rem;align-items:center;max-width:1400px;margin:0 auto}
+    .av{position:relative}
+    .ap{width:100%;aspect-ratio:3/4;background:#161616;border:1px solid rgba(245,160,0,.12);display:flex;align-items:center;justify-content:center;position:relative}
+    .ap::before{content:'';position:absolute;inset:1.5rem;border:1px solid rgba(245,160,0,.06)}
+    .ap span{font-family:var(--mono);font-size:.65rem;color:var(--chalk-dim);letter-spacing:.2em;opacity:.3}
+    .aa{position:absolute;top:-1.5rem;right:-1.5rem;width:100px;height:100px;border:1px solid rgba(245,160,0,.25)}
+    .at{color:var(--chalk)}
+    .at .slabel{color:var(--gold)}
+    .at .stitle{color:var(--chalk);margin:.8rem 0 2rem}
+    .at p{color:var(--chalk-dim);line-height:1.95;font-size:1rem;margin-bottom:1.4rem}
+    .at strong{color:var(--gold);font-weight:400}
+    .atags{display:flex;gap:.8rem;flex-wrap:wrap;margin-top:2rem}
+    .atag{font-family:var(--mono);font-size:.62rem;letter-spacing:.25em;color:var(--gold);border:1px solid rgba(245,160,0,.28);padding:.38rem .9rem;text-transform:uppercase}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:3rem;padding-top:3rem;border-top:1px solid rgba(255,255,255,.06)}
+    .snum{font-size:2.2rem;color:var(--gold);display:block}
+    .slab{font-family:var(--mono);font-size:.62rem;color:var(--chalk-dim);letter-spacing:.22em;text-transform:uppercase;margin-top:.3rem;display:block}
+
+    /* Contact */
+    #contact{background:var(--bg);padding:8rem 3rem;text-align:center}
+    .ci{max-width:640px;margin:0 auto}
+    .ci .slabel{color:var(--gold)}
+    .ci .stitle{color:var(--chalk);font-size:clamp(2.8rem,7vw,5.5rem);margin:.8rem 0 1.5rem}
+    .ci>p{font-family:var(--mono);font-size:.78rem;color:var(--chalk-dim);letter-spacing:.12em;margin-bottom:2.5rem}
+    .email{display:inline-block;font-size:1.15rem;color:var(--gold);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .3s;margin-bottom:3rem}
+    .email:hover{border-color:var(--gold)}
+    .soc{display:flex;gap:2.5rem;justify-content:center}
+    .soc a{font-family:var(--mono);font-size:.68rem;letter-spacing:.3em;color:var(--chalk-dim);text-decoration:none;text-transform:uppercase;transition:color .3s}
+    .soc a:hover{color:var(--gold)}
+    footer{background:var(--bg);text-align:center;padding:2.5rem;border-top:1px solid rgba(255,255,255,.04)}
+    footer p{font-family:var(--mono);font-size:.6rem;color:var(--chalk-dim);letter-spacing:.3em;opacity:.3}
+
+    /* Modals */
+    #wm{position:fixed;inset:0;z-index:1001;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s}
+    #wm.on{opacity:1;pointer-events:all}
+    .mb{position:absolute;inset:0;background:rgba(5,5,5,.88);backdrop-filter:blur(8px)}
+    .mc{position:relative;background:var(--parchment);color:var(--ink);max-width:720px;width:90vw;max-height:86vh;overflow-y:auto;padding:3.5rem;z-index:1}
+    .mc::-webkit-scrollbar{width:4px}.mc::-webkit-scrollbar-thumb{background:rgba(26,20,15,.18)}
+    .mcl{position:absolute;top:1.5rem;right:1.5rem;background:none;border:1px solid rgba(26,20,15,.2);color:var(--ink);width:36px;height:36px;font-size:.85rem;cursor:none;display:flex;align-items:center;justify-content:center;transition:background .2s}
+    .mcl:hover{background:rgba(26,20,15,.08)}
+    .mtag{font-family:var(--mono);font-size:.6rem;letter-spacing:.4em;color:#b07000;text-transform:uppercase;margin-bottom:1rem}
+    .mtitle{font-size:2rem;font-weight:400;color:var(--ink);line-height:1.25;margin-bottom:.8rem}
+    .mmeta{font-family:var(--mono);font-size:.62rem;letter-spacing:.18em;color:var(--ink-dim);margin-bottom:2.5rem;padding-bottom:2rem;border-bottom:1px solid rgba(26,20,15,.1)}
+    .mbody{font-size:1rem;line-height:1.95;color:var(--ink)}
+    .mbody p{margin-bottom:1.4rem}.mbody p:last-child{margin-bottom:0}
+    #lb{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s}
+    #lb.on{opacity:1;pointer-events:all}
+    .lbc{position:absolute;top:2rem;right:2rem;background:none;border:1px solid rgba(245,160,0,.3);color:var(--gold);width:44px;height:44px;font-size:1rem;cursor:none;display:flex;align-items:center;justify-content:center;transition:background .3s}
+    .lbc:hover{background:rgba(245,160,0,.1)}
+
+    @keyframes fu{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes dr{to{stroke-dashoffset:0}}
+    @keyframes sp{0%,100%{opacity:.3}50%{opacity:1}}
+    @keyframes si{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+    #burger{display:none;flex-direction:column;justify-content:center;gap:6px;background:none;border:none;cursor:none;padding:4px;z-index:1001}
+    #burger span{display:block;width:24px;height:1.5px;background:rgba(245,160,0,.8);transform-origin:center;transition:transform .4s ease,opacity .35s ease,width .35s ease}
+    #burger.open span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
+    #burger.open span:nth-child(2){opacity:0;width:0}
+    #burger.open span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+    #mob-menu{position:fixed;inset:0;z-index:999;background:rgba(8,8,8,.97);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .5s cubic-bezier(.4,0,.2,1)}
+    #mob-menu.open{opacity:1;pointer-events:all}
+    #mob-close{position:absolute;top:1.8rem;right:1.8rem;background:none;border:none;cursor:none;color:rgba(242,242,242,.3);font-size:1.1rem;font-family:var(--mono);letter-spacing:.05em;transition:color .3s;padding:.5rem;line-height:1}
+    #mob-close:hover{color:rgba(242,242,242,.7)}
+    .mob-inner{display:flex;flex-direction:column;align-items:center}
+    .mob-nav,.mob-util{list-style:none;text-align:center}
+    .mob-nav li,.mob-util li{opacity:0;transform:translateY(22px);transition:opacity .5s ease,transform .5s ease}
+    #mob-menu.open .mob-nav li:nth-child(1){opacity:1;transform:none;transition-delay:.1s}
+    #mob-menu.open .mob-nav li:nth-child(2){opacity:1;transform:none;transition-delay:.18s}
+    #mob-menu.open .mob-nav li:nth-child(3){opacity:1;transform:none;transition-delay:.26s}
+    #mob-menu.open .mob-util li:nth-child(1){opacity:1;transform:none;transition-delay:.38s}
+    #mob-menu.open .mob-util li:nth-child(2){opacity:1;transform:none;transition-delay:.46s}
+    .mob-nav a{font-family:var(--mono);font-size:clamp(1.8rem,9vw,2.8rem);color:rgba(242,242,242,.3);text-decoration:none;letter-spacing:.28em;text-transform:uppercase;transition:color .35s ease,text-shadow .35s ease;display:block;padding:.55rem 0}
+    .mob-nav a.on,.mob-nav a:hover{color:rgba(242,242,242,.9);text-shadow:0 0 40px rgba(245,160,0,.28)}
+    .mob-sep{width:1px;height:44px;background:linear-gradient(to bottom,transparent,rgba(245,160,0,.2),transparent);margin:1rem auto}
+    .mob-util a{font-family:var(--mono);font-size:clamp(.7rem,3.5vw,.85rem);color:rgba(242,242,242,.28);text-decoration:none;letter-spacing:.38em;text-transform:uppercase;transition:color .35s ease;display:block;padding:.45rem 0}
+    .mob-util a:hover{color:rgba(242,242,242,.65)}
+    @media(max-width:860px){nav{grid-template-columns:1fr auto;padding:1.2rem 1.8rem}.tabs,.nav-r{display:none}#burger{display:flex}}
+    @media(max-width:700px){
+      .gg{grid-template-columns:1fr 1fr}.gi:nth-child(n){grid-column:span 1!important;min-height:180px!important}
+      .pg{grid-template-columns:1fr 1fr}.phi:nth-child(n){grid-column:span 1!important;min-height:180px!important}
+      .wg{grid-template-columns:1fr}.ai{grid-template-columns:1fr;gap:3rem}
+      .si{padding:5rem 1.5rem}#about,#contact{padding:5rem 1.5rem}
+    }
+  </style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<canvas id="trail"></canvas>
+
+<nav>
+  <a href="#" class="logo" id="home-link" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;"><svg class="logo-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>Ash's POV</a>
+  <ul class="tabs">
+    <li><a href="#" class="on" data-t="a">Thoughts</a></li>
+    <li><a href="#" data-t="w">Traces</a></li>
+    <li><a href="#" data-t="p">Frames</a></li>
+  </ul>
+  <div class="nav-r">
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <button id="burger" aria-label="Open menu"><span></span><span></span><span></span></button>
+</nav>
+
+<div id="mob-menu" role="dialog" aria-modal="true">
+  <button id="mob-close" aria-label="Close menu">&#10005;</button>
+  <div class="mob-inner">
+    <ul class="mob-nav">
+      <li><a href="#" data-t="a" class="mob-tab on">Thoughts</a></li>
+      <li><a href="#" data-t="w" class="mob-tab">Traces</a></li>
+      <li><a href="#" data-t="p" class="mob-tab">Frames</a></li>
+    </ul>
+    <div class="mob-sep"></div>
+    <ul class="mob-util">
+      <li><a href="#about" class="mob-link">About</a></li>
+      <li><a href="#contact" class="mob-link">Contact</a></li>
+    </ul>
+  </div>
+</div>
+
+<section id="hero">
+  <div class="hbg"></div>
+  <div class="hc">
+    <h1 class="htitle">Ash's<br><span>POV</span></h1>
+    <p class="hsub">Fragments of thought, sketches, and observations caught in real time !</p>
+    <div class="flourish">
+      <svg width="360" height="100" viewBox="0 0 360 70" fill="none">
+        <path class="dp" stroke-width="1.6" d="M10 35 Q50 12 100 35 Q150 58 200 35 Q250 12 310 35 Q335 42 350 32"/>
+        <path class="dp d1" stroke-width="0.7" opacity="0.35" d="M30 50 Q110 40 180 50 Q250 60 330 50"/>
+        <circle class="dp d2" cx="10" cy="35" r="3" stroke-width="1.2"/>
+        <circle class="dp d2" cx="350" cy="32" r="3" stroke-width="1.2"/>
+      </svg>
+    </div>
+    <div class="hlinks">
+      <a href="#" data-t="a">&#8594; Thoughts</a>
+      <a href="#" data-t="w">&#8594; Traces</a>
+      <a href="#" data-t="p">&#8594; Frames</a>
+    </div>
+  </div>
+  <div class="scroll-ind"><span>Scroll</span><div class="scroll-line"></div></div>
+</section>
+
+<div id="wrap">
+
+  <!-- ART -->
+  <div id="sa" class="sec on">
+    <div class="si">
+      <div class="sh"><p class="slabel">Selected works</p><h2 class="stitle">Sketches &amp; Charcoal</h2></div>
+      <div class="gg">
+
+        <div class="gi pi" data-speed="0.08">
+          <div class="gp"><svg width="72" height="72" viewBox="0 0 72 72" stroke="#F5A000" fill="none"><rect x="8" y="8" width="56" height="56" stroke-width="1"/><path d="M8 56 L26 30 L40 44 L54 22 L64 34" stroke-width="1.6" stroke-linejoin="round"/><circle cx="26" cy="30" r="2.5" fill="#F5A000" stroke="none"/></svg><span class="gpl">Portrait study I</span></div>
+          <div class="go"><h3 class="git">Portrait Study I</h3><p class="gim">Charcoal on paper &mdash; 2025</p></div>
+        </div>
+
+        <div class="gi pi" data-speed="0.04">
+          <div class="gp"><svg width="56" height="56" viewBox="0 0 64 64" stroke="#F5A000" fill="none"><circle cx="32" cy="32" r="22" stroke-width="1"/><path d="M18 32 Q32 14 46 32 Q32 50 18 32Z" stroke-width="1.5"/><circle cx="32" cy="32" r="5" stroke-width="0.8"/></svg><span class="gpl">Eye series II</span></div>
+          <div class="go"><h3 class="git">Eye Series II</h3><p class="gim">Pencil on paper &mdash; 2025</p></div>
+        </div>
+
+        <div class="gi pi" data-speed="0.12">
+          <div class="gp"><svg width="52" height="52" viewBox="0 0 64 64" stroke="#F5A000" fill="none"><path d="M10 58 L32 8 L54 58 Z" stroke-width="1.5"/><path d="M20 38 L44 38" stroke-width="0.7"/><path d="M16 48 L48 48" stroke-width="0.7"/></svg><span class="gpl">Geometric I</span></div>
+          <div class="go"><h3 class="git">Geometric I</h3><p class="gim">Graphite &mdash; 2024</p></div>
+        </div>
+
+        <div class="gi pi" data-speed="0.06">
+          <div class="gp"><svg width="72" height="52" viewBox="0 0 80 52" stroke="#F5A000" fill="none"><path d="M4 42 Q20 6 40 26 Q60 46 76 10" stroke-width="1.6" stroke-linecap="round"/><path d="M4 46 Q20 10 40 30 Q60 50 76 14" stroke-width="0.6" opacity="0.4"/></svg><span class="gpl">Flow study</span></div>
+          <div class="go"><h3 class="git">Flow Study</h3><p class="gim">Charcoal &mdash; 2025</p></div>
+        </div>
+
+        <div class="gi pi" data-speed="0.10">
+          <div class="gp"><svg width="44" height="62" viewBox="0 0 48 64" stroke="#F5A000" fill="none"><rect x="8" y="8" width="32" height="48" stroke-width="1"/><line x1="8" y1="26" x2="40" y2="26" stroke-width="0.5"/><line x1="8" y1="44" x2="40" y2="44" stroke-width="0.5"/><circle cx="24" cy="17" r="5" stroke-width="1"/></svg><span class="gpl">Figure study III</span></div>
+          <div class="go"><h3 class="git">Figure Study III</h3><p class="gim">Pencil &mdash; 2024</p></div>
+        </div>
+
+        <div class="gi pi" data-speed="0.05">
+          <div class="gp"><svg width="52" height="52" viewBox="0 0 60 60" stroke="#F5A000" fill="none"><path d="M6 30 C18 6 26 54 30 30 C34 6 42 54 54 30" stroke-width="1.6" stroke-linecap="round"/></svg><span class="gpl">Rhythm I</span></div>
+          <div class="go"><h3 class="git">Rhythm I</h3><p class="gim">Graphite &mdash; 2025</p></div>
+        </div>
+
+        <div class="gi pi" data-speed="0.09">
+          <div class="gp"><svg width="56" height="56" viewBox="0 0 64 64" stroke="#F5A000" fill="none"><path d="M32 6 Q58 32 32 58 Q6 32 32 6Z" stroke-width="1.5"/><circle cx="32" cy="32" r="9" stroke-width="0.9"/></svg><span class="gpl">Negative space</span></div>
+          <div class="go"><h3 class="git">Negative Space</h3><p class="gim">Charcoal &mdash; 2024</p></div>
+        </div>
+
+        <div class="gi pi" data-speed="0.03">
+          <div class="gp"><svg width="52" height="52" viewBox="0 0 64 64" stroke="#F5A000" fill="none"><path d="M8 32 L32 8 L56 32 L32 56 Z" stroke-width="1.5"/><path d="M20 32 L32 20 L44 32 L32 44 Z" stroke-width="0.8"/><circle cx="32" cy="32" r="3" fill="#F5A000" stroke="none" opacity="0.6"/></svg><span class="gpl">Shadow box</span></div>
+          <div class="go"><h3 class="git">Shadow Box</h3><p class="gim">Pencil &mdash; 2025</p></div>
+        </div>
+
+        <div class="gi pi" data-speed="0.07">
+          <div class="gp"><svg width="60" height="52" viewBox="0 0 72 52" stroke="#F5A000" fill="none"><path d="M6 46 C18 16 28 50 36 28 C44 6 54 42 66 8" stroke-width="1.6" stroke-linecap="round"/><circle cx="6" cy="46" r="2.5" fill="#F5A000" stroke="none"/><circle cx="66" cy="8" r="2.5" fill="#F5A000" stroke="none"/></svg><span class="gpl">Tension study</span></div>
+          <div class="go"><h3 class="git">Tension Study</h3><p class="gim">Graphite &mdash; 2025</p></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- WRITING -->
+  <div id="sw" class="sec">
+    <div class="si">
+      <div class="sh"><p class="slabel">Essays &amp; notes</p><h2 class="stitle">Writing</h2></div>
+      <div class="wg">
+
+        <div class="wc" data-post="0"><p class="wtag">Essay</p><h3 class="wtitle">On the weight of a pencil</h3><p class="wex">Every tool has a grammar. The pencil insists on hesitation — it lets you change your mind, lets you erase. But the longer you work, the more you realise the pencil is not about forgiveness.</p><div class="wft"><span class="wdate">May 2026</span><span class="wread">Read &#8594;</span></div></div>
+
+        <div class="wc" data-post="1"><p class="wtag">Reflection</p><h3 class="wtitle">Shadows and what they remember</h3><p class="wex">Charcoal is the medium that understands shadows best — because charcoal is itself a kind of shadow. Burned wood. The ghost of something that once held light in its cells.</p><div class="wft"><span class="wdate">April 2026</span><span class="wread">Read &#8594;</span></div></div>
+
+        <div class="wc" data-post="2"><p class="wtag">Photography</p><h3 class="wtitle">Why I photograph silence</h3><p class="wex">There is a particular quality of light in a room after everyone has left. The chairs still hold the ghost of weight. A glass on the sill catches the late afternoon at exactly the angle that makes you want to be smaller.</p><div class="wft"><span class="wdate">March 2026</span><span class="wread">Read &#8594;</span></div></div>
+
+        <div class="wc" data-post="3"><p class="wtag">Craft</p><h3 class="wtitle">The grammar of lines</h3><p class="wex">A line is never just a line. It is a direction, a speed, a pressure. It knows whether the hand that made it was afraid. You can feel the hesitation at the corner of a mouth in a portrait.</p><div class="wft"><span class="wdate">February 2026</span><span class="wread">Read &#8594;</span></div></div>
+
+        <div class="wc" data-post="4"><p class="wtag">Journal</p><h3 class="wtitle">Sketchbook as archive</h3><p class="wex">I have seventeen sketchbooks. They sit on a shelf in chronological order, spines worn, some with paint on the covers, most with coffee rings. I rarely open the old ones.</p><div class="wft"><span class="wdate">January 2026</span><span class="wread">Read &#8594;</span></div></div>
+
+        <div class="wc" data-post="5"><p class="wtag">Essay</p><h3 class="wtitle">Figure, ground, and everything between</h3><p class="wex">The art school exercise: draw not the object, but the space around it. You're not drawing the chair — you're drawing the air the chair displaces. A lesson I keep relearning.</p><div class="wft"><span class="wdate">December 2025</span><span class="wread">Read &#8594;</span></div></div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PHOTOS -->
+  <div id="sp" class="sec">
+    <div class="si">
+      <div class="sh"><p class="slabel">Visual journal</p><h2 class="stitle">Photography</h2></div>
+      <div class="pg">
+
+        <div class="phi"><div class="pp"><svg width="52" height="52" viewBox="0 0 64 64" stroke="#F5A000" fill="none"><rect x="4" y="10" width="56" height="44" rx="2" stroke-width="1"/><circle cx="32" cy="32" r="12" stroke-width="1"/><circle cx="32" cy="32" r="5" stroke-width="0.8"/><circle cx="52" cy="16" r="3" stroke-width="0.8"/></svg><span class="ppl">Light through glass</span></div><div class="po"><h3 class="ptitle">Light Through Glass</h3><p class="pmeta">35mm &mdash; Jan 2026</p></div></div>
+
+        <div class="phi"><div class="pp"><svg width="44" height="56" viewBox="0 0 48 64" stroke="#F5A000" fill="none"><path d="M8 4 L8 60" stroke-width="1"/><path d="M40 4 L40 60" stroke-width="1"/><path d="M8 20 L28 20" stroke-width="1.4"/><path d="M8 44 L34 44" stroke-width="1.4"/></svg><span class="ppl">Empty corridor</span></div><div class="po"><h3 class="ptitle">Empty Corridor</h3><p class="pmeta">Digital &mdash; Feb 2026</p></div></div>
+
+        <div class="phi"><div class="pp"><svg width="56" height="40" viewBox="0 0 64 48" stroke="#F5A000" fill="none"><path d="M0 40 Q16 28 32 34 Q48 40 64 28" stroke-width="1" opacity="0.5"/><path d="M0 30 Q16 18 32 24 Q48 30 64 18" stroke-width="0.8" opacity="0.4"/><path d="M0 20 Q16 8 32 14 Q48 20 64 8" stroke-width="0.6" opacity="0.3"/></svg><span class="ppl">Morning fog</span></div><div class="po"><h3 class="ptitle">Morning Fog</h3><p class="pmeta">35mm &mdash; Mar 2026</p></div></div>
+
+        <div class="phi"><div class="pp"><svg width="44" height="44" viewBox="0 0 56 56" stroke="#F5A000" fill="none"><path d="M28 4 L28 52" stroke-width="1"/><path d="M4 28 L52 28" stroke-width="1"/><circle cx="28" cy="28" r="10" stroke-width="1"/></svg><span class="ppl">Hands at work</span></div><div class="po"><h3 class="ptitle">Hands at Work</h3><p class="pmeta">Digital &mdash; Mar 2026</p></div></div>
+
+        <div class="phi"><div class="pp"><svg width="44" height="44" viewBox="0 0 56 56" stroke="#F5A000" fill="none"><rect x="8" y="8" width="40" height="40" stroke-width="1"/><rect x="16" y="16" width="24" height="24" stroke-width="0.7"/><rect x="24" y="24" width="8" height="8" stroke-width="0.5"/></svg><span class="ppl">Urban geometry</span></div><div class="po"><h3 class="ptitle">Urban Geometry</h3><p class="pmeta">35mm &mdash; Apr 2026</p></div></div>
+
+        <div class="phi"><div class="pp"><svg width="56" height="44" viewBox="0 0 64 48" stroke="#F5A000" fill="none"><ellipse cx="32" cy="28" rx="18" ry="12" stroke-width="1"/><path d="M14 28 Q32 8 50 28" stroke-width="0.6" opacity="0.4"/><line x1="32" y1="16" x2="32" y2="4" stroke-width="1"/><circle cx="32" cy="28" r="4" stroke-width="0.8"/></svg><span class="ppl">Still life</span></div><div class="po"><h3 class="ptitle">Still Life</h3><p class="pmeta">Digital &mdash; Apr 2026</p></div></div>
+
+        <div class="phi"><div class="pp"><svg width="52" height="52" viewBox="0 0 64 64" stroke="#F5A000" fill="none"><path d="M4 60 L20 20 L32 40 L44 10 L60 60" stroke-width="1.4" stroke-linejoin="round"/><path d="M4 60 L60 60" stroke-width="0.5" opacity="0.4"/></svg><span class="ppl">Horizon line</span></div><div class="po"><h3 class="ptitle">Horizon Line</h3><p class="pmeta">35mm &mdash; May 2026</p></div></div>
+
+      </div>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+
+<section id="about">
+  <div class="ai">
+    <div class="av">
+      <div class="ap"><span>[ your photo here ]</span></div>
+      <div class="aa"></div>
+    </div>
+    <div class="at">
+      <p class="slabel">The artist</p>
+      <h2 class="stitle">Ash's<br>POV</h2>
+      <p>I work across <strong>drawing, writing, and photography</strong> — three ways of looking at the same thing. Pencil and charcoal for the slow seeing, words for what the image leaves behind, and a camera for the moments I can't draw fast enough.</p>
+      <p>My practice lives in the quiet space between <strong>light and shadow</strong>. I'm drawn to faces, empty rooms, and the grammar of everyday things — the way a hand rests on a table, the way a corridor holds its breath.</p>
+      <p>Based wherever the light is interesting.</p>
+      <div class="atags">
+        <span class="atag">Pencil &amp; Charcoal</span>
+        <span class="atag">Essay &amp; Journal</span>
+        <span class="atag">35mm &amp; Digital</span>
+      </div>
+      <div class="stats">
+        <div><span class="snum">47+</span><span class="slab">Artworks</span></div>
+        <div><span class="snum">12</span><span class="slab">Essays</span></div>
+        <div><span class="snum">200+</span><span class="slab">Photographs</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="ci">
+    <p class="slabel">Get in touch</p>
+    <h2 class="stitle">Let's talk<br>about art.</h2>
+    <p>Commissions, collaborations, or just a conversation about craft.</p>
+    <a href="mailto:hello@ash-strokespace.com" class="email">hello@ash-strokespace.com</a>
+    <div class="soc">
+      <a href="#">Instagram</a><a href="#">Behance</a><a href="#">Pinterest</a>
+    </div>
+  </div>
+</section>
+
+<footer><p>&copy; 2026 Ash's POV &mdash; All rights reserved</p></footer>
+
+<div id="lb">
+  <button class="lbc" onclick="cLb()">&#10005;</button>
+  <div id="lbb"></div>
+</div>
+
+<div id="wm">
+  <div class="mb" onclick="cWm()"></div>
+  <div class="mc">
+    <button class="mcl" onclick="cWm()">&#10005;</button>
+    <p class="mtag" id="mt"></p>
+    <h2 class="mtitle" id="mti"></h2>
+    <p class="mmeta" id="mm"></p>
+    <div class="mbody" id="mb"></div>
+  </div>
+</div>
+
+<script>
+const P=[
+  {tag:'Essay',title:'On the weight of a pencil',date:'May 2026',body:'<p>Every tool has a grammar. The pencil insists on hesitation — it lets you change your mind, lets you erase, lets you return. But the longer you work, the more you realise the pencil is not about forgiveness. It is about commitment in small doses.</p><p>I\'ve been thinking about what it means to pick up a pencil instead of a pen, a brush, a piece of charcoal. There is something in the weight of it — that particular lightness — that feels like a question rather than a statement.</p><p>The pen commits. The brush commits emphatically. But the pencil holds its options open, and perhaps that is why it is the tool of sketches, of drafts, of first thoughts. It is the tool that remembers that beginnings are not endings.</p><p>And yet. When you watch someone who has drawn for decades pick up a pencil, there is no hesitation at all. The line comes down with exactly the right pressure, the right speed. The pencil stops being a question and becomes a sentence. A complete one.</p><p>I think about this often. How mastery is not the absence of uncertainty but the ability to move through it without waiting for it to resolve.</p>'},
+  {tag:'Reflection',title:'Shadows and what they remember',date:'April 2026',body:'<p>Charcoal is the medium that understands shadows best — because charcoal is itself a kind of shadow. Burned wood. The ghost of something that once held light in its cells. When I press it against paper, I\'m asking it to remember what it was.</p><p>The interesting thing about charcoal is that it smudges. This is not a flaw. This is its character. You can\'t make a charcoal line that is entirely certain of itself — the edges blur slightly, breathe, suggest. Even at its darkest, charcoal holds the possibility of lightness.</p><p>Shadows in a drawing are not just the dark parts. They are the argument between presence and absence. They are how you know a thing has volume, that it occupies space, that it is real. Without shadow, a face is just a collection of features. With shadow, it becomes a person.</p><p>I\'ve been sitting with that thought lately: that to understand something, you often have to look at what surrounds it. The shadow tells you where the light has been.</p>'},
+  {tag:'Photography',title:'Why I photograph silence',date:'March 2026',body:'<p>There is a particular quality of light in a room after everyone has left. The chairs still hold the ghost of weight. A glass on the sill catches the late afternoon at exactly the angle that makes you want to be smaller, quieter, more still.</p><p>I started photographing empty rooms almost by accident. I was early to a meeting once, sitting alone, and the light through the venetian blinds was making these exact parallel shadows on the table. I photographed it before anyone arrived. It is still one of my favourite photographs.</p><p>What I\'ve come to understand: silence has a texture. You can feel it in the quality of light. Rooms that have been recently occupied feel different from rooms that have been empty for a long time. The shadows are more settled.</p><p>Photography, for me, is about learning to see what is already there. Not adding. Not arranging. Just waiting until the light agrees with itself.</p>'},
+  {tag:'Craft',title:'The grammar of lines',date:'February 2026',body:'<p>A line is never just a line. It is a direction, a speed, a pressure. It knows whether the hand that made it was afraid. You can feel the hesitation at the corner of a mouth in a portrait — where the artist paused, reconsidered, and pressed on anyway.</p><p>I\'ve been studying old sketchbooks. Not mine — other people\'s. There is something extraordinary about looking at a master\'s sketchbook, the pages where they were thinking, not performing. The lines are more alive in the rough sketches than in the finished works.</p><p>Every line has a grammar: a subject (where it starts), a verb (the movement of the hand), and an object (where it arrives). The punctuation is the pressure — how hard you press at different points creates emphasis, rhythm, breath.</p><p>The hardest thing to teach is line quality. You can explain proportion, perspective, value. But line quality is something you feel in your hand long before you can see it on the page.</p>'},
+  {tag:'Journal',title:'Sketchbook as archive',date:'January 2026',body:'<p>I have seventeen sketchbooks. They sit on a shelf in chronological order, spines worn, some with paint on the covers, most with coffee rings. I rarely open the old ones. But I know they\'re there, and something about that knowledge changes how I draw today.</p><p>An archive is not just a record. It is a kind of permission — permission to move forward because you have already proven to yourself that you can. Every filled sketchbook is evidence that you kept going. Even on the bad days. Even when the drawings were terrible.</p><p>The first sketchbook is the hardest to fill. Everything feels too precious, the blank pages too white. The seventeenth sketchbook is different. You know the paper will survive whatever you put on it. You know you will survive the bad drawings.</p>'},
+  {tag:'Essay',title:'Figure, ground, and everything between',date:'December 2025',body:'<p>The art school exercise: draw not the object, but the space around it. Negative space. You\'re not drawing the chair — you\'re drawing the air the chair displaces. This is a lesson I keep relearning. In drawing. In writing. In conversation.</p><p>There is a particular freedom that comes from looking at what surrounds the thing rather than the thing itself. You stop being attached to your idea of what it should look like. You start seeing what is actually there.</p><p>In writing, the negative space is what you don\'t say. The pause. The sentence that ends before it should. White space on the page is not emptiness — it is silence between phrases, and silence carries weight.</p><p>I keep returning to this idea that the most interesting things in any work are the edges — where one thing becomes another. Where figure becomes ground. That threshold is where most of the meaning lives.</p>'}
+];
+
+const bg={a:'#0D0D0D',w:'#f4efe6',p:'#0D0D0D'};
+const wr=document.getElementById('wrap');
+
+function sw(t){
+  document.querySelectorAll('.tabs a').forEach(a=>a.classList.toggle('on',a.dataset.t===t));
+  const cur=document.querySelector('.sec.on'),nxt=document.getElementById('s'+t);
+  if(cur===nxt)return;
+  cur.classList.remove('on');
+  wr.style.background=bg[t];
+  nxt.classList.add('on');
+  rev(nxt);
+  wr.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+document.querySelectorAll('[data-t]').forEach(el=>el.addEventListener('click',e=>{e.preventDefault();sw(el.dataset.t);}));
+
+const burger=document.getElementById('burger'),mobMenu=document.getElementById('mob-menu'),mobClose=document.getElementById('mob-close');
+function openMob(){burger.classList.add('open');mobMenu.classList.add('open');document.body.style.overflow='hidden';}
+function closeMob(){burger.classList.remove('open');mobMenu.classList.remove('open');document.body.style.overflow='';}
+burger.addEventListener('click',()=>mobMenu.classList.contains('open')?closeMob():openMob());
+mobClose.addEventListener('click',closeMob);
+document.querySelectorAll('.mob-tab').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();sw(a.dataset.t);document.querySelectorAll('.mob-tab').forEach(x=>x.classList.toggle('on',x.dataset.t===a.dataset.t));closeMob();}));
+document.querySelectorAll('.mob-link').forEach(a=>a.addEventListener('click',closeMob));
+wr.style.background=bg.a;
+
+function rev(s){s.querySelectorAll('.gi,.phi,.wc').forEach((el,i)=>setTimeout(()=>el.classList.add('rv'),i*80));}
+
+const ro=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('rv');ro.unobserve(e.target);}});},{threshold:.07});
+document.querySelectorAll('.gi,.phi,.wc').forEach(el=>ro.observe(el));
+
+const cur2=document.getElementById('cursor');
+document.addEventListener('mousemove',e=>{cur2.style.left=e.clientX+'px';cur2.style.top=e.clientY+'px';});
+document.querySelectorAll('a,button,.gi,.wc,.phi').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cur2.style.transform='translate(-50%,-50%) scale(2.2)');
+  el.addEventListener('mouseleave',()=>cur2.style.transform='translate(-50%,-50%) scale(1)');
+});
+
+const cv=document.getElementById('trail'),ctx=cv.getContext('2d');
+let pts=[];
+function rs(){cv.width=window.innerWidth;cv.height=window.innerHeight;}
+rs();window.addEventListener('resize',rs);
+document.addEventListener('mousemove',e=>{for(let i=0;i<4;i++)pts.push({x:e.clientX+(Math.random()-.5)*8,y:e.clientY+(Math.random()-.5)*8,s:Math.random()*2.5+.5,a:Math.random()*.45+.15,d:Math.random()*.014+.008,ang:Math.random()*Math.PI*2,l:Math.random()*9+3});});
+(function loop(){ctx.clearRect(0,0,cv.width,cv.height);pts=pts.filter(p=>p.a>.01);pts.forEach(p=>{ctx.save();ctx.globalAlpha=p.a;ctx.strokeStyle='#F5A000';ctx.lineWidth=p.s*.45;ctx.lineCap='round';ctx.translate(p.x,p.y);ctx.rotate(p.ang);ctx.beginPath();ctx.moveTo(-p.l/2,0);ctx.lineTo(p.l/2,0);ctx.stroke();ctx.restore();p.a-=p.d;p.l*=.96;});requestAnimationFrame(loop);})();
+
+window.addEventListener('scroll',()=>{document.querySelectorAll('.pi').forEach(el=>{const s=parseFloat(el.dataset.speed)||.06,c=el.getBoundingClientRect().top+el.offsetHeight/2-window.innerHeight/2;el.style.setProperty('--py',(c*s).toFixed(2)+'px');});},{passive:true});
+
+const lb=document.getElementById('lb'),lbb=document.getElementById('lbb');
+document.querySelectorAll('.gi').forEach(gi=>{
+  gi.addEventListener('click',()=>{
+    const t=gi.querySelector('.git')?.textContent||'',m=gi.querySelector('.gim')?.textContent||'',s=gi.querySelector('.gp svg');
+    lbb.innerHTML=`<div style="border:1px solid rgba(245,160,0,.2);padding:3.5rem;background:#161616;display:flex;flex-direction:column;align-items:center;gap:1rem;min-width:280px;">${s?s.outerHTML:''}<h2 style="color:var(--chalk);font-size:1.4rem;font-weight:400;margin-top:1rem;">${t}</h2><p style="font-family:var(--mono);font-size:.7rem;color:var(--gold);letter-spacing:.2em;">${m}</p><p style="font-family:var(--mono);font-size:.6rem;color:var(--chalk-dim);opacity:.3;letter-spacing:.2em;margin-top:.5rem;">[ add your artwork image here ]</p></div>`;
+    lb.classList.add('on');
+  });
+});
+function cLb(){lb.classList.remove('on');}
+lb.addEventListener('click',e=>{if(e.target===lb)cLb();});
+
+const wm=document.getElementById('wm');
+document.querySelectorAll('.wc').forEach(c=>{
+  c.addEventListener('click',()=>{
+    const p=P[parseInt(c.dataset.post)];if(!p)return;
+    document.getElementById('mt').textContent=p.tag;
+    document.getElementById('mti').textContent=p.title;
+    document.getElementById('mm').textContent=p.date;
+    document.getElementById('mb').innerHTML=p.body;
+    wm.classList.add('on');document.body.style.overflow='hidden';
+  });
+});
+function cWm(){wm.classList.remove('on');document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){cLb();cWm();}});
+document.querySelector('nav').addEventListener('scroll',()=>{},false);
+window.addEventListener('scroll',()=>{document.querySelector('nav').style.boxShadow=window.scrollY>60?'0 1px 0 rgba(245,160,0,.08)':'none';},{passive:true});
+</script>
+</body>
+</html>
